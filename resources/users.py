@@ -25,11 +25,21 @@ def register():
 
 	try:
 		# check DB if user exists
-		User.get(User.email == payload['email'] or User.username == payload['username'])
+		User.get(User.email == payload['email'])
+
+		# User.get(User.email == payload['email'], User.username == payload['username'])
+
+		# if User.email == payload['email'] and User.username == payload['username']:
+		# 	description = f"Account with Email {payload['email']} and Username {payload['username']} already exists",
+		# elif User.username == payload['username']:
+		# 	description = f"Account with Username {payload['username']} already exists",
+		# else:
+		# 	desctiption = f"Account with Email {payload['email']} already exists",
 
 		return jsonify(
 			data={},
-			description=f"Account with Email {payload['email']} already exists",
+			# description=description,
+			description= f"Account with Email {payload['email']} already exists",
 			status=401
 		), 401
 	#exinate models. , just DoesNotExist
