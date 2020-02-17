@@ -6,6 +6,8 @@ from flask import Flask, g
 # try destructuring here or importing specific variables
 from models import DATABASE
 
+from resources.users import users
+
 
 
 DEBUG = True
@@ -16,6 +18,9 @@ PORT = 8000 # hidr in production into .env
 app = Flask(__name__)
 
 
+
+# blueprint to set 'controllers' to handle model routes
+app.register_blueprint(users, url_prefix='/api/v1.0/users')
 
 
 # decrease SQL connection pool, open/close (before/ after) DB on every request

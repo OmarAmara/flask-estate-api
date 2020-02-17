@@ -17,6 +17,7 @@ DATABASE = SqliteDatabase('searches.sqlite')
 ## class models
 class User(Model):
 	email = CharField(unique=True)
+	username = CharField()
 	# Future: min length, requirements
 	password = CharField()
 	firstname = CharField()
