@@ -1,13 +1,13 @@
 ## imported modules
 
 # g(global variable)
-from flask import Flask, g
+from flask import Flask, g, jsonify
 
 # try destructuring here or importing specific variables
-from models import DATABASE
 
 from resources.users import users
 
+from models import DATABASE, User
 
 
 DEBUG = True
@@ -30,8 +30,8 @@ def before_request():
 	g.db.connect()
 
 @app.after_request
-def after_request(respons):
-	d.db.close()
+def after_request(response):
+	g.db.close()
 	return response
 
 

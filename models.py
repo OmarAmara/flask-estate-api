@@ -42,7 +42,7 @@ def initialize():
 
 
 # creates tables for classes above
-# DATABASE.create_tables([ ], safe=True)
+DATABASE.create_tables([User], safe=True)
 print('Connected to DB, created tables if non-existed')
 #######print/insert date here!###########
 

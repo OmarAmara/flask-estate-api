@@ -1,4 +1,4 @@
-from models import User
+from models import User, DoesNotExist
 
 from flask import Blueprint, request, jsonify
 from flask_bcrypt import generate_password_hash
@@ -33,7 +33,7 @@ def register():
 			status=401
 		), 401
 	#exinate models. , just DoesNotExist
-	except models.DoesNotExist:
+	except DoesNotExist:
 
 		created_user = User.create(
 			email=payload['email'],
@@ -50,9 +50,9 @@ def register():
 		user_dict = model_to_dict(created_user)
 		print(user_dict)
 
-		### remove user password from response
+		user_dict.pop('password')
 
-		return jsonfiy(
+		return jsonify(
 			data=user_dict,
 			message=f"Successfully registered {user_dict['email']}",
 			status=201,
