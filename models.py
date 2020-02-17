@@ -4,6 +4,9 @@ import datetime
 
 from peewee import *
 
+# enable cookies/ login authentication
+from flask_login import UserMixin
+
 
 
 
@@ -15,7 +18,7 @@ DATABASE = SqliteDatabase('searches.sqlite')
 
 
 ## class models
-class User(Model):
+class User(UserMixin, Model):
 	email = CharField(unique=True)
 	username = CharField()
 	# Future: min length, requirements

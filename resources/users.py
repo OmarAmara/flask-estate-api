@@ -1,10 +1,10 @@
 from models import User, DoesNotExist
 
 from flask import Blueprint, request, jsonify
+# enable encryption
 from flask_bcrypt import generate_password_hash, check_password_hash
-
-## import flask login_user
-
+# enables cookies(session)
+from flask_login import login_user, current_user, logout_user
 from playhouse.shortcuts import model_to_dict
 
 
@@ -57,13 +57,16 @@ def register():
 			password=generate_password_hash(payload['password'])
 		)
 
+		# login user
+		login_user(created_user)
+
 		# created user
 		user_dict = model_to_dict(created_user)
 		print(user_dict)
 
 		user_dict.pop('password')
 		user_dict.pop('secretanswer')
-		user_dict.pop('secretanswer')
+		user_dict.pop('secretquestion')
 
 		return jsonify(
 			data=user_dict,
@@ -89,9 +92,12 @@ def login():
 		# if there is a match
 		if compare_password:
 
+			# cookie
+			login_user(user)
+
 			user_dict.pop('password')
 			user_dict.pop('secretanswer')
-			user_dict.pop('secretanswer')
+			user_dict.pop('secretquestion')
 			return jsonify(
 				data=user_dict,
 				message=f"Successfully logged in: {user_dict}",
@@ -116,8 +122,14 @@ def login():
 			status=401
 		), 401
 
-
-
-
+# logout route to destroy cookie/ login_user
+@users.route('/logout', methods=['GET'])
+def logout():
+	logout_user()
+	return jsonify(
+		data={},
+		message="Successfully logged out of account.",
+		status=200
+	), 200
 
 
