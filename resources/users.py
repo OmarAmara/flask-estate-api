@@ -1,7 +1,7 @@
 from models import User, DoesNotExist
 
 from flask import Blueprint, request, jsonify
-from flask_bcrypt import generate_password_hash
+from flask_bcrypt import generate_password_hash, check_password_hash
 
 ## import flask login_user
 
@@ -27,6 +27,7 @@ def register():
 		# check DB if user exists
 		User.get(User.email == payload['email'])
 
+		### Find way to retrieve username with same query like below:
 		# User.get(User.email == payload['email'], User.username == payload['username'])
 
 		# if User.email == payload['email'] and User.username == payload['username']:
@@ -61,6 +62,8 @@ def register():
 		print(user_dict)
 
 		user_dict.pop('password')
+		user_dict.pop('secretanswer')
+		user_dict.pop('secretanswer')
 
 		return jsonify(
 			data=user_dict,
@@ -69,6 +72,49 @@ def register():
 		), 201
 
 
+# user login route
+@users.route('/login', methods=['POST'])
+def login():
+	payload = request.get_json()
+	payload['email'] = payload['email'].lower()
+	# payload['username'] = payload['username'].lower()
+	try:
+		# find by email
+		user = User.get(User.email == payload['email'].lower())
+
+		# if found, compare to password
+		user_dict = model_to_dict(user)
+		compare_password = check_password_hash(user_dict['password'], payload['password'])
+
+		# if there is a match
+		if compare_password:
+
+			user_dict.pop('password')
+			user_dict.pop('secretanswer')
+			user_dict.pop('secretanswer')
+			return jsonify(
+				data=user_dict,
+				message=f"Successfully logged in: {user_dict}",
+				status=200
+			), 200
+
+		else:
+			print('Password does not match user')
+
+			return jsonify(
+				data={},
+				message='Email or Password is incorrect',
+				status=401
+			), 401
+
+	# user not found
+	except DoesNotExist:
+		print('Username/ Email does not match')
+		return jsonify(
+			data={},
+			message='Email or Password is incorrect',
+			status=401
+		), 401
 
 
 
