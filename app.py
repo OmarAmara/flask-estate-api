@@ -1,8 +1,10 @@
 ## imported modules
 
-from flask import Flask
+# g(global variable)
+from flask import Flask, g
 
-import models
+# try destructuring here or importing specific variables
+from models import DATABASE
 
 
 
@@ -16,7 +18,16 @@ app = Flask(__name__)
 
 
 
+# decrease SQL connection pool, open/close (before/ after) DB on every request
+@app.before_request
+def before_request():
+	g.db = DATABASE
+	g.db.connect()
 
+@app.after_request
+def after_request(respons):
+	d.db.close()
+	return response
 
 
 
