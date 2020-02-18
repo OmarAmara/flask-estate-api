@@ -36,7 +36,6 @@ def searches_index():
 	), 200
 
 
-
 # search create route
 @searches.route('/', methods=['POST'])
 @login_required
@@ -105,16 +104,18 @@ def update_search(id):
 	# update search if search.client id matches logged in user id
 	if search.client.id == current_user.id:
 
-		update_query = Search.update(**payload).where(search)
+		### somehow utilize query already used to check if conditional.
+		update_query = Search.update(**payload).where(Search.id == id)
 
 		update_query.execute()
 
 		# update_search.save()
-
-		search_dict = model_to_dict(search)
+		# search_dict = model_to_dict(search)
+		updated_search = Search.get_by_id(id)
+		updated_search_dict = model_to_dict(updated_search)
 
 		return jsonify(
-			data=search_dict,
+			data=updated_search_dict,
 			message=f"Successfully updated User's Search with id {id}",
 			status=200
 		), 200
