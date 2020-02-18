@@ -38,7 +38,19 @@ def load_user(userid):
 	except DoesNotExist:
 		return None
 
-### Authorization w/ other model routes ###
+
+# change default html unauthorized response to custom json
+@login_manager.unauthorized_handler
+def unauthorized():
+	return jsonify(
+		data={
+			'unauthorized': 'User must login to account'
+		},
+		message='You must be logged in to access resource',
+		status=401
+	), 401
+	
+
 ### CORS will be inserted here to enable access to API ### Will also need to be installed.
 
 
