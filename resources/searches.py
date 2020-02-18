@@ -48,7 +48,32 @@ def create_search():
 		status=201
 	), 201
 
-### route to delete
+# search delete/destroy route
+@searches.route('/<id>', methods=['Delete'])
+@login_required
+def delete_search(id):
+	# find user's search
+	search_to_delete = Search.get_by_id(id)
+
+	if current_user.id == search_to_delete.client.id:
+		search_to_delete.delete_instance()
+
+		return jsonify(
+			data={},
+			message=f"Successfully deleted Search with id {id}",
+			status=200
+		), 200
+
+	else:
+		return jsonify(
+			data={
+				'unauthorized': 'FORBIDDEN'
+			},
+			message="Search client_id does not match logged in user_id. User can only delete their own stored searches",
+			status=403
+		), 403
+
+
 
 
 
