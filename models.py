@@ -8,17 +8,14 @@ from peewee import *
 from flask_login import UserMixin
 
 
-
-
-
 #### .gitignore DB connection during deployment, transfer to psql
 # portable data for development: value = DB connection string
 DATABASE = SqliteDatabase('searches.sqlite')
 
 
-
 ## class models
 class User(UserMixin, Model):
+	## Place Limits on characters allowed for certain fields
 	email = CharField(unique=True)
 	username = CharField()
 	# Future: min length, requirements
@@ -35,8 +32,21 @@ class User(UserMixin, Model):
 	class Meta:
 		database = DATABASE
 
-# class Search(Model):
-	# origin = ForeignKeyField(User, backref='searches')
+class Search(Model):
+		## Place Limits on characters allowed for certain fields
+	name = CharField()
+	# charfield, extended zipcode includes a dahs '-' between numbers
+	zipcode = CharField()
+	# square feet, number
+	sqrft = IntegerField()
+	# may need to be altered. For price range.
+	upperprice = IntegerField()
+	lowerprice = IntegerField()
+	client = ForeignKeyField(User, backref='searches')
+	created_on = DateTimeField(default=datetime.datetime.now)
+
+	class Meta:
+		database = DATABASE
 
 
 # method to set-up DB's connection
@@ -45,7 +55,7 @@ def initialize():
 
 
 # creates tables for classes above
-DATABASE.create_tables([User], safe=True)
+DATABASE.create_tables([User, Search], safe=True)
 print('Connected to DB, created tables if non-existed')
 #######print/insert date here!###########
 

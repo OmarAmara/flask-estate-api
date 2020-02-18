@@ -133,3 +133,7 @@ def logout():
 	), 200
 
 
+
+#### CREATE PUT route to edit user info ####
+
+

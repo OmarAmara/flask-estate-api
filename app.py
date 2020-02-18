@@ -3,12 +3,15 @@
 # g(global variable)
 from flask import Flask, g, jsonify
 
+### Install and import CORS here ###
+
 from flask_login import LoginManager
 
 # try destructuring here or importing specific variables
 from resources.users import users
+from resources.searches import searches
 
-from models import DATABASE, User, DoesNotExist
+from models import DATABASE, User, DoesNotExist, initialize
 
 
 DEBUG = True
@@ -35,13 +38,13 @@ def load_user(userid):
 	except DoesNotExist:
 		return None
 
-
+### Authorization w/ other model routes ###
 ### CORS will be inserted here to enable access to API ### Will also need to be installed.
 
 
 # blueprint to set 'controllers' to handle model routes
 app.register_blueprint(users, url_prefix='/api/v1.0/users')
-
+app.register_blueprint(searches, url_prefix='/api/v1.0/searches')
 
 # decrease SQL connection pool, open/close (before/ after) DB on every request
 @app.before_request
@@ -60,5 +63,5 @@ def after_request(response):
 ### Listener
 if __name__ == '__main__':
 	# requiring DB before listener below. Sets-up tables in models.py
-	# models.initialize()
+	initialize()
 	app.run(debug=DEBUG, port=PORT)
