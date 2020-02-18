@@ -21,12 +21,30 @@ searches = Blueprint('searches', 'searches')
 	# INSERT QUERY AND RETURN LOGIC
 
 
+# search index route
+@searches.route('/', methods=['GET'])
+@login_required
+def searches_index():
+	current_user_searches = [model_to_dict(search) for search in current_user.searches]
+
+	######### remove passwords
+
+	return jsonify(
+		data=current_user_searches,
+		message=f'Successfully retrieved {len(current_user_searches)} Searches for {current_user.firstname}',
+		status=200
+	), 200
+
+
+
 # search create route
 @searches.route('/', methods=['POST'])
 @login_required
 def create_search():
 	payload = request.get_json()
 
+	### would this be more concise for users if search info is placed in a list or dict called search?
+	### Just so that there is no confusion between client result and all others?
 	search = Search.create(
 		name=payload['name'],
 		zipcode=payload['zipcode'],
@@ -48,6 +66,7 @@ def create_search():
 		status=201
 	), 201
 
+
 # search delete/destroy route
 @searches.route('/<id>', methods=['Delete'])
 @login_required
@@ -67,9 +86,46 @@ def delete_search(id):
 	else:
 		return jsonify(
 			data={
-				'unauthorized': 'FORBIDDEN'
+				'error': 'FORBIDDEN'
 			},
 			message="Search client_id does not match logged in user_id. User can only delete their own stored searches",
+			status=403
+		), 403
+
+
+# search update/edit route
+@searches.route('/<id>', methods=['PUT'])
+@login_required
+def update_search(id):
+	payload = request.get_json()
+
+	# find search by id for verification in if statement below
+	search = Search.get_by_id(id)
+
+	# update search if search.client id matches logged in user id
+	if search.client.id == current_user.id:
+
+		update_query = Search.update(**payload).where(search)
+
+		update_query.execute()
+
+		# update_search.save()
+
+		search_dict = model_to_dict(search)
+
+		return jsonify(
+			data=search_dict,
+			message=f"Successfully updated User's Search with id {id}",
+			status=200
+		), 200
+
+	# account does not belong to user
+	else:
+		return jsonify(
+			data={
+				'error': 'FORBIDDEN'
+			},
+			message=f"Search's client_id of ({search.client.id}) does not match logged in user's id of ({current_user.id}). Can only update logged in user's Search.",
 			status=403
 		), 403
 

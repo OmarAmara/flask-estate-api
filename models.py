@@ -39,7 +39,7 @@ class Search(Model):
 	zipcode = CharField()
 	# square feet, number
 	sqrft = IntegerField()
-	# may need to be altered. For price range.
+	# For pice range. May need to be altered.
 	upperprice = IntegerField()
 	lowerprice = IntegerField()
 	client = ForeignKeyField(User, backref='searches')
