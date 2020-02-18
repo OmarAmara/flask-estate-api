@@ -7,18 +7,9 @@ from flask_login import current_user, login_required
 
 from playhouse.shortcuts import model_to_dict
 
+
 # searches Blueprint/ 'controller'
 searches = Blueprint('searches', 'searches')
-
-
-#### create routes, utilize login_required: index, delete, update
-
-# search list index
-# @searches.route('/', methods=['GET'])
-# # route only available if logged in
-# @login_required
-# def searches_index():
-	# INSERT QUERY AND RETURN LOGIC
 
 
 # search index route
@@ -27,7 +18,10 @@ searches = Blueprint('searches', 'searches')
 def searches_index():
 	current_user_searches = [model_to_dict(search) for search in current_user.searches]
 
-	######### remove passwords
+	for dictionary in current_user_searches:
+		dictionary['client'].pop('password')
+		dictionary['client'].pop('secretanswer')
+		dictionary['client'].pop('secretquestion')
 
 	return jsonify(
 		data=current_user_searches,
@@ -36,7 +30,12 @@ def searches_index():
 	), 200
 
 
-###### Create Show route
+
+############# CREATE AN INDEX ROUTE !login_required for unregistered users.... See todo.md for details.
+# All Users: all searches index route
+
+
+
 # search show route
 @searches.route('/<id>', methods=['GET'])
 def one_search(id):
@@ -62,15 +61,14 @@ def one_search(id):
 			search_dict['client'].pop('hometown')
 			search_dict['client'].pop('email')
 			search_dict['client'].pop('created_on')
-			search_dict['client'].pop('lastname')
+			search_dict['client']['lastname'] = 'hidden'
+			search_dict['client']['username'] = 'hidden'
 
 		return jsonify(
 			data=search_dict,
 			message=f"Found and displaying Search with id of {search.id}",
 			status=200
 		), 200
-
-
 
 
 # search create route
@@ -103,7 +101,7 @@ def create_search():
 	), 201
 
 
-# search delete/destroy route
+# search delete route
 @searches.route('/<id>', methods=['Delete'])
 @login_required
 def delete_search(id):

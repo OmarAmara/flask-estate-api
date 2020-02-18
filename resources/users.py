@@ -137,3 +137,6 @@ def logout():
 #### CREATE PUT route to edit user info ####
 
 
+### CREATE DESTROY user route. (delete route would just delete user, destroy would destroy user and realtions i.e. searches)
+
+
