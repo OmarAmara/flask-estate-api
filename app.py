@@ -3,6 +3,8 @@
 # g(global variable)
 from flask import Flask, g, jsonify
 
+from flask_cors import CORS
+
 ### Install and import CORS here ###
 
 from flask_login import LoginManager
@@ -49,9 +51,11 @@ def unauthorized():
 		message='You must be logged in to access resource',
 		status=401
 	), 401
-	
 
-### CORS will be inserted here to enable access to API ### Will also need to be installed.
+
+# development # change the origins that are accepted when deploying. supports_credentials(cookies)
+CORS(users, origins=['http://localhost:3000'], supports_credentials=True)
+CORS(searches, origins=['http://localhost:3000'], supports_credentials=True)
 
 
 # blueprint to set 'controllers' to handle model routes
