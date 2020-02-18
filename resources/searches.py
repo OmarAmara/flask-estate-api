@@ -36,6 +36,43 @@ def searches_index():
 	), 200
 
 
+###### Create Show route
+# search show route
+@searches.route('/<id>', methods=['GET'])
+def one_search(id):
+	search = Search.get_by_id(id)
+
+	# User is not logged in
+	if not current_user.is_authenticated:
+		jsonify(
+			data={
+				##### insert specific data that is public to all users
+			},
+			message='Register to have access to additional information and other user benefits.',
+			status=200
+		), 200
+	# logged in/ registered user, can access additional info
+	else:
+		search_dict = model_to_dict(search)
+		search_dict['client'].pop('password')
+		search_dict['client'].pop('secretanswer')
+		search_dict['client'].pop('secretquestion')
+
+		if search.client_id != current_user.id:
+			search_dict['client'].pop('hometown')
+			search_dict['client'].pop('email')
+			search_dict['client'].pop('created_on')
+			search_dict['client'].pop('lastname')
+
+		return jsonify(
+			data=search_dict,
+			message=f"Found and displaying Search with id of {search.id}",
+			status=200
+		), 200
+
+
+
+
 # search create route
 @searches.route('/', methods=['POST'])
 @login_required

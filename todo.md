@@ -6,4 +6,4 @@
 
 *	Install and implement CORS origin for connected servers such as front-end react app
 
-*
+*	create searches show route
