@@ -1,4 +1,4 @@
-from models import User, DoesNotExist
+import models
 
 from flask import Blueprint, request, jsonify
 # enable encryption
@@ -25,7 +25,7 @@ def register():
 
 	try:
 		# check DB if user exists
-		User.get(User.email == payload['email'])
+		models.User.get(models.User.email == payload['email'])
 
 		### Find way to retrieve username with same query like below:
 		# User.get(User.email == payload['email'], User.username == payload['username'])
@@ -44,9 +44,9 @@ def register():
 			status=401
 		), 401
 	#exinate models. , just DoesNotExist
-	except DoesNotExist:
+	except models.DoesNotExist:
 
-		created_user = User.create(
+		created_user = models.User.create(
 			email=payload['email'],
 			username=payload['username'],
 			firstname=payload['firstname'],
@@ -83,7 +83,7 @@ def login():
 	# payload['username'] = payload['username'].lower()
 	try:
 		# find by email
-		user = User.get(User.email == payload['email'].lower())
+		user = models.User.get(models.User.email == payload['email'].lower())
 
 		# if found, compare to password
 		user_dict = model_to_dict(user)
@@ -114,7 +114,7 @@ def login():
 			), 401
 
 	# user not found
-	except DoesNotExist:
+	except models.DoesNotExist:
 		print('Username/ Email does not match')
 		return jsonify(
 			data={},

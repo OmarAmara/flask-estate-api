@@ -1,6 +1,6 @@
 import datetime
 
-from models import Search, DoesNotExist
+import models
 
 from flask import Blueprint, request, jsonify
 
@@ -41,7 +41,7 @@ def searches_index():
 # search show route
 @searches.route('/<id>', methods=['GET'])
 def one_search(id):
-	search = Search.get_by_id(id)
+	search = models.Search.get_by_id(id)
 
 	# User is not logged in
 	if not current_user.is_authenticated:
@@ -81,7 +81,7 @@ def create_search():
 
 	### would this be more concise for users if search info is placed in a list or dict called search?
 	### Just so that there is no confusion between client result and all others?
-	search = Search.create(
+	search = models.Search.create(
 		name=payload['name'],
 		zipcode=payload['zipcode'],
 		sqrft=payload['sqrft'],
@@ -109,7 +109,7 @@ def create_search():
 @login_required
 def delete_search(id):
 	# find user's search
-	search_to_delete = Search.get_by_id(id)
+	search_to_delete = models.Search.get_by_id(id)
 
 	if current_user.id == search_to_delete.client.id:
 		search_to_delete.delete_instance()
@@ -137,13 +137,13 @@ def update_search(id):
 	payload = request.get_json()
 
 	# find search by id for verification in if statement below
-	search = Search.get_by_id(id)
+	search = models.Search.get_by_id(id)
 
 	# update search if search.client id matches logged in user id
 	if search.client.id == current_user.id:
 
 		### somehow utilize query already used to check if conditional.
-		update_query = Search.update(**payload).where(Search.id == id)
+		update_query = models.Search.update(**payload).where(models.Search.id == id)
 
 		update_query.execute()
 
@@ -156,7 +156,7 @@ def update_search(id):
 
 		# update_search.save()
 		# search_dict = model_to_dict(search)
-		updated_search = Search.get_by_id(id)
+		updated_search = models.Search.get_by_id(id)
 		updated_search_dict = model_to_dict(updated_search)
 
 		return jsonify(
