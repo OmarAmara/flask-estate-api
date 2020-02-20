@@ -58,8 +58,8 @@ def unauthorized():
 
 
 # development # change the origins that are accepted when deploying. supports_credentials(cookies)
-CORS(users, origins=['http://localhost:3000'], supports_credentials=True)
-CORS(searches, origins=['http://localhost:3000'], supports_credentials=True)
+CORS(users, origins=['http://localhost:3000', 'https://estate--find-where-you-land.herokuapp.com'], supports_credentials=True)
+CORS(searches, origins=['http://localhost:3000', 'https://estate--find-where-you-land.herokuapp.com'], supports_credentials=True)
 
 
 # blueprint to set 'controllers' to handle model routes
