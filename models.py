@@ -65,10 +65,10 @@ def initialize():
 	DATABASE.connect()
 
 
-# creates tables for classes above
-DATABASE.create_tables([User, Search], safe=True)
-print('Connected to DB, created tables if non-existed')
-#######print/insert date here!###########
+	# creates tables for classes above
+	DATABASE.create_tables([User, Search], safe=True)
+	print('Connected to DB, created tables if non-existed')
+	#######print/insert date here!###########
 
-# close DB connection, free space in connection pool
-DATABASE.close()
+	# close DB connection, free space in connection pool
+	DATABASE.close()
