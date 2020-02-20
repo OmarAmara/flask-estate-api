@@ -15,7 +15,8 @@ from flask_login import LoginManager
 from resources.users import users
 from resources.searches import searches
 
-from models import DATABASE, User, DoesNotExist, initialize
+# from models import DATABASE, User, DoesNotExist, initialize
+import models
 
 
 DEBUG = True
@@ -39,8 +40,8 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(userid):
 	try:
-		return User.get(User.id == userid)
-	except DoesNotExist:
+		return models.User.get(models.User.id == userid)
+	except models.DoesNotExist:
 		return None
 
 
@@ -68,7 +69,7 @@ app.register_blueprint(searches, url_prefix='/api/v1.0/searches')
 # decrease SQL connection pool, open/close (before/ after) DB on every request
 @app.before_request
 def before_request():
-	g.db = DATABASE
+	g.db = models.DATABASE
 	g.db.connect()
 
 @app.after_request
@@ -84,5 +85,5 @@ if 'ON_HEROKU' in os.environ:
 ### Listener
 if __name__ == '__main__':
 	# requiring DB before listener below. Sets-up tables in models.py
-	initialize()
+	models.initialize()
 	app.run(debug=DEBUG, port=PORT)
