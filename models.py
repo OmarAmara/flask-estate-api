@@ -44,6 +44,7 @@ class Search(Model):
 	lowerprice = IntegerField()
 	client = ForeignKeyField(User, backref='searches')
 	created_on = DateTimeField(default=datetime.datetime.now)
+	last_modified = CharField()
 
 	class Meta:
 		database = DATABASE

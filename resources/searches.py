@@ -1,3 +1,5 @@
+import datetime
+
 from models import Search, DoesNotExist
 
 from flask import Blueprint, request, jsonify
@@ -85,6 +87,7 @@ def create_search():
 		sqrft=payload['sqrft'],
 		upperprice=payload['upperprice'],
 		lowerprice=payload['lowerprice'],
+		# last_modified=datetime.datetime.now,
 		client=current_user.id
 	)
 
@@ -143,6 +146,13 @@ def update_search(id):
 		update_query = Search.update(**payload).where(Search.id == id)
 
 		update_query.execute()
+
+		# search.name = payload['name'] if 'name' in payload else None
+		# search.zipcode = payload['zipcode'] if 'zipcode' in payload else None
+		# search.sqrft = payload['sqrft'] if 'sqrft' in payload else None
+		# search.upperprice = payload['upperprice'] if 'upperprice' in payload else None
+		# search.lowerprice = payload['lowerprice'] if 'lowerprice' in payload else None
+		# search.last_modified = datetime.datetime.now
 
 		# update_search.save()
 		# search_dict = model_to_dict(search)
