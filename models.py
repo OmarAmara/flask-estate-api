@@ -1,5 +1,7 @@
 ## modules
 
+from playhouse.db_url import connect
+
 import datetime
 
 from peewee import *
@@ -10,7 +12,14 @@ from flask_login import UserMixin
 
 #### .gitignore DB connection during deployment, transfer to psql
 # portable data for development: value = DB connection string
-DATABASE = SqliteDatabase('searches.sqlite')
+# DATABASE = SqliteDatabase('searches.sqlite') --> before deployment
+
+if 'ON_HEROKU' in os.environ:
+	DATABASE = connect(os.environ.get('DATABASE_URL'))
+
+else:
+	# first arg = DB name; second arg = unix/linux name
+	DATABASE = PostgresqlDatabase('estates', user='omaramara')
 
 
 ## class models
@@ -44,7 +53,7 @@ class Search(Model):
 	lowerprice = IntegerField()
 	client = ForeignKeyField(User, backref='searches')
 	created_on = DateTimeField(default=datetime.datetime.now)
-	last_modified = CharField()
+	# last_modified = CharField()
 
 	class Meta:
 		database = DATABASE

@@ -1,4 +1,6 @@
 ## imported modules
+# for deployment
+import os
 
 # g(global variable)
 from flask import Flask, g, jsonify
@@ -22,10 +24,11 @@ PORT = 8000 # hidr in production into .env
 
 
 app = Flask(__name__)
-
-
-##### secret key: Store as environment variable, .gitignore when deploying
-app.secret_key = 'Super secret, nobody will ever guess it!'
+##### secret key: Store as environment variable when deploying
+app.config.update(
+	# TESTING=True,
+	SECRET_KEY='Super secret, nobody will ever guess it! Not #ven _/'
+)
 
 # instantiate
 login_manager = LoginManager()
@@ -73,8 +76,10 @@ def after_request(response):
 	g.db.close()
 	return response
 
-
-
+# in production, app is run with gunicorn, this initializes the tables in that case.
+if 'ON_HEROKU' in os.environ:
+	print('\non heroku!')
+	models.initialize()
 
 ### Listener
 if __name__ == '__main__':

@@ -8,5 +8,5 @@
 
 *	create user DESTROY route: Destroy everything including relations/related models i.e. searches.
 
-*	Install and implement CORS origin for connected servers such as front-end react app
+*	create a last_modified in User and Search models schema.
 
