@@ -2,10 +2,14 @@
 Flask Real-Estate API to store user credentials/ search parameters to be utilized with React.js front-end and 3rd party API. 
 For an example of a front end utilizing these routes, check out react-estate repo at https://github.com/OAmara/react-estate.
 
+Routes:
+
+All routes should be programmed starting with home page url, then followed by one of the following routes. JSON data must be sent to API routes. The API will respond with JSON as well.
+
 	— USER Routes —
 GET         /api/v1.0/users       -> Index — show all
 POST       /api/v1.0/users        -> Create — create a new User
-GET          (show user route)    -> Not a route, show User by saving response from login into variable 
+GET       (show user route) -> Not a route, show User by saving response from login into variable 
 PUT      /api/v1.0/users/(id)     -> Update — edit/change/update User. (Not yet a route)
 DESTROY /api/v1.0/users/(id)      -> DESTROY User relatables and then DELETE User(not yet a route)
 
@@ -16,8 +20,13 @@ GET       /api/v1.0/searches/(id)     -> Show specific/one Search
 PUT      /api/v1.0/searches/(id)      -> Update — edit/change/update Search
 DESTROY /api/v1.0/searches/(id)       -> DELETE Search
 
+To Authenticate User, the User must have data corresponding with the User class model in the models.py file. Once user is created, all that is needed to login will be the email and password associated with the User Account.
 
-Set-up/ Install: (assuming you already have python3 installed)
+
+The following Instructions are used for the cloning and set-up of this API.
+
+Set-up/ Install: 
+	(assuming you already have python3 installed and virtualenv set-up in nano ~/.bash_profile)
 
 	step 1:
 			Run in CLI: 'virtualenv .env -p python3'
